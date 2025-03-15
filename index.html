@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking System</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        body { 
+            font-family: 'Orbitron', sans-serif; 
+            text-align: center; 
+            margin: 0; 
+            padding: 0;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        header {
+            background: linear-gradient(to right, #141e30, #243b55);
+            color: white;
+            padding: 20px;
+            font-size: 26px;
+            width: 100%;
+            text-transform: uppercase;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 1.5cm;
+            margin-top: 30px;
+        }
+        .parking-slot { 
+            width: 200px; 
+            height: 60px; 
+            text-align: center; 
+            line-height: 60px; 
+            border-radius: 10px; 
+            font-size: 18px;
+            color: white; 
+            cursor: pointer; 
+            transition: transform 0.2s, background-color 0.3s;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        .parking-slot:hover {
+            transform: scale(1.1);
+        }
+        .free { background-color: #16a085; }
+        .occupied { background-color: #c0392b; }
+
+        .user-input {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        .user-input select, .user-input button {
+            padding: 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .user-input select {
+            background-color: #2c3e50;
+            color: white;
+        }
+        .user-input button {
+            background: linear-gradient(to right, #1f4037, #99f2c8);
+            color: black;
+            font-weight: bold;
+        }
+        .user-input button:hover {
+            background-color: #27ae60;
+            transform: scale(1.05);
+        }
+        .feedback {
+            margin-top: 50px; /* Add margin to create distance between the slot and the message */
+            font-size: 18px;
+            color: #f8f9fa;
+        }
+        .welcome-screen {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+            color: white;
+            text-align: center;
+            padding: 20px;
+        }
+        .welcome-screen h1 {
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .welcome-screen p {
+            font-size: 20px;
+            margin-bottom: 30px;
+        }
+        .welcome-screen button {
+            padding: 12px 24px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            background: linear-gradient(to right, #1f4037, #99f2c8);
+            color: black;
+            font-weight: bold;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .welcome-screen button:hover {
+            background-color: #27ae60;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <div class="welcome-screen" id="welcome-screen">
+        <h1>Welcome to the Smart Parking System</h1>
+        <p>Check and book your parking slots easily with our system. Select a slot and choose an action to get started.</p>
+        <button onclick="startBooking()">Get Started</button>
+    </div>
+    <header id="main-header" style="display: none;">Smart Parking System</header>
+    <div class="user-input" style="display: none;">
+        <select id="slot-select">
+            <option value="slot1">Parking Slot 1</option>
+            <option value="slot2">Parking Slot 2</option>
+            <option value="slot3">Parking Slot 3</option>
+            <option value="slot4">Parking Slot 4</option>
+            <option value="slot5">Parking Slot 5</option>
+        </select>
+        <select id="action-select">
+            <option value="book">Book Slot</option>
+            <option value="free">Free Slot</option>
+        </select>
+        <button onclick="handleUserAction()">Submit</button>
+    </div>
+    <div class="container" style="display: none;">
+        <div id="slot1" class="parking-slot free">Parking Slot 1 - Free</div>
+        <div id="slot2" class="parking-slot free">Parking Slot 2 - Free</div>
+        <div id="slot3" class="parking-slot free">Parking Slot 3 - Free</div>
+        <div id="slot4" class="parking-slot free">Parking Slot 4 - Free</div>
+        <div id="slot5" class="parking-slot free">Parking Slot 5 - Free</div>
+    </div>
+    <div id="feedback" class="feedback" style="display: none;"></div>
+
+    <script>
+        function startBooking() {
+            document.getElementById("welcome-screen").style.display = "none";
+            document.getElementById("main-header").style.display = "block";
+            document.querySelector(".user-input").style.display = "flex";
+            document.querySelector(".container").style.display = "flex";
+            document.getElementById("feedback").style.display = "block";
+        }
+
+        function handleUserAction() {
+            const slotSelect = document.getElementById("slot-select").value;
+            const actionSelect = document.getElementById("action-select").value;
+            const selectedSlot = document.getElementById(slotSelect);
+            const feedback = document.getElementById("feedback");
+
+            if (actionSelect === "book") {
+                selectedSlot.classList.remove("free");
+                selectedSlot.classList.add("occupied");
+                selectedSlot.textContent = `${selectedSlot.id.replace("slot", "Parking Slot ")} - Occupied`;
+                feedback.textContent = `You have successfully booked ${selectedSlot.id.replace("slot", "Parking Slot ")}.`;
+            } else {
+                selectedSlot.classList.remove("occupied");
+                selectedSlot.classList.add("free");
+                selectedSlot.textContent = `${selectedSlot.id.replace("slot", "Parking Slot ")} - Free`;
+                feedback.textContent = `${selectedSlot.id.replace("slot", "Parking Slot ")} is now free.`;
+            }
+        }
+    </script>
+</body>
+</html>
