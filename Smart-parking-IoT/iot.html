@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Parking System</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            margin: 20px;
+        }
+        h1 {
+            color: #333;
+        }
+        .container {
+            width: 80%;
+            margin: auto;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            margin: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            background: #28a745;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+        button:hover {
+            background: #218838;
+        }
+        #slotStatus {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Smart Parking System</h1>
+        <p>Check parking slot availability, book a slot, and pay easily!</p>
+        
+        <button onclick="checkAvailability()">Check Slot Availability</button>
+        <button onclick="bookSlot()">Book a Slot</button>
+        <button onclick="makePayment()">Pay Now</button>
+        
+        <p id="slotStatus"></p>
+    </div>
+
+    <script>
+        let parkingSlots = [
+            { id: 1, status: "Available" },
+            { id: 2, status: "Occupied" },
+            { id: 3, status: "Available" }
+        ];
+
+        function checkAvailability() {
+            let availableSlots = parkingSlots.filter(slot => slot.status === "Available");
+            if (availableSlots.length > 0) {
+                document.getElementById("slotStatus").innerHTML = 
+                    `Available Slots: ${availableSlots.map(s => 'Slot ' + s.id).join(', ')}`;
+            } else {
+                document.getElementById("slotStatus").innerHTML = "No slots available.";
+            }
+        }
+
+        function bookSlot() {
+            let availableSlot = parkingSlots.find(slot => slot.status === "Available");
+            if (availableSlot) {
+                availableSlot.status = "Occupied";
+                document.getElementById("slotStatus").innerHTML = 
+                    `Slot ${availableSlot.id} booked successfully!`;
+            } else {
+                document.getElementById("slotStatus").innerHTML = "No slots available for booking.";
+            }
+        }
+
+        function makePayment() {
+            alert("Redirecting to Payment Gateway...");
+            document.getElementById("slotStatus").innerHTML = "Payment Successful!";
+        }
+    </script>
+
+</body>
+</html>
